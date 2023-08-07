@@ -36,6 +36,7 @@ addmargins(table(nsw$treated))
 #install.packages("cobalt")
 library(MatchIt)
 library(cobalt)
+library(jtools)
 
 rct_bal <- matchit(treated ~ age + educ + black + hispanic + married + nodegree + re75,
 					 data = nsw, method = NULL)
@@ -43,7 +44,7 @@ summary(rct_bal)
 plot(summary(rct_bal))
 love.plot(rct_bal, binary = "std")
 bal.plot(rct_bal, var.name = "re75")
-plot(rct_bal, type = "density", which.xs = c("age", "educ", "black"))
+plot(rct_bal, type = "density", which.xs = names(rct_bal$X))
 
 
 # Let's try with my pstest for R
@@ -71,6 +72,7 @@ ggplot(nsw, aes(x = as.factor(treated), y = re75)) + geom_boxplot()
 
 rct_mod0 <- lm(re78 ~ treated, data = nsw)
 summ(rct_mod0, digits = 3)
+
 
 
 ## Regression adjustment 		

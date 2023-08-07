@@ -20,12 +20,19 @@
 nsw_psid <- read.csv("nsw_psid.csv")
 
 str(nsw_psid)
+dplyr::glimpse(nsw_psid)
 
 summary(nsw_psid)
 
 summary(nsw_psid$treated)
 
 addmargins(table(nsw_psid$treated))
+
+## Approx 10% are treated
+
+## Ages between 17 and 55, mean of 33.76
+
+#re = real earnings in year ()
 
 
 ## 1. Compare the characteristics of the NSW treated group
@@ -34,9 +41,10 @@ addmargins(table(nsw_psid$treated))
 
 #install.packages("MatchIt")
 #install.packages("cobalt")
+#install.packages("jtools")
+library(jtools)
 library(MatchIt)
 library(cobalt)
-
 
 raw_bal <- matchit(treated ~ age + educ + black + hispanic + married + nodegree + re75,
 					 data = nsw_psid, method = NULL)
@@ -45,7 +53,7 @@ summary(raw_bal)
 plot(summary(raw_bal))
 love.plot(raw_bal, binary = "std")
 bal.plot(raw_bal, var.name = "re75")
-plot(raw_bal, type = "density", which.xs = c("age", "educ", "black"))
+plot(raw_bal, type = "density", which.xs = namesc("age", "educ", "black"))
 
 # Let's try with my pstest for R
 # Make sure the scripts are in your working directory
@@ -59,6 +67,7 @@ pstest0(varlist = covariates, treated = treated, data = nsw_psid)
 
 # Scatter plot
 result <- pstest0(varlist = covariates, treated = treated, data = nsw_psid)
+
 # ck out max bias do decide on xmax
 result
 pstest_scatter(data=result, xmax=200)
@@ -78,8 +87,6 @@ naive_eY0
 
 naive_eY1 - naive_eY0
 
-#install.packages("jtools")
-library(jtools)
 naive_mod <- lm(re78 ~ treated, data = nsw_psid)
 summ(naive_mod, digits = 3)
 

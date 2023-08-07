@@ -33,7 +33,6 @@ nsw_psid <- nsw_psid %>%
 
 covariates <- c("age", "educ", "black", "hispanic", "married", "nodegree", "re75")
 
-
 score_mod <- glm(treat0 ~ age + educ + black + hispanic + married + nodegree + re75, 
                   family = binomial(link = "probit"), 
                   data = nsw_psid)
